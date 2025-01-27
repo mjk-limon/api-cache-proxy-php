@@ -23,7 +23,7 @@ return [
     'timezone' => 'Asia/Dhaka',
 
     'spl' => function ($class) {
-        $path = sprintf('%s/Classes/%s.php', __DIR__, $class);
+        $path = sprintf('%s/classes/%s.php', __DIR__, $class);
 
         if (file_exists($path)) {
             return require($path);
