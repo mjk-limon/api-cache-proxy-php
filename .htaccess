@@ -1,0 +1,24 @@
+<IfModule mod_headers.c>
+  SetEnvIf Origin "http(s)?://(www\.prothomalo\.com|en\.prothomalo\.com|beta\.prothomalo\.com|en-beta\.prothomalo\.com|bn\.prothom-alo\.com|eng\.prothom-alo\.com)$" AccessControlAllowOrigin=$0
+  Header always set Access-Control-Allow-Origin %{AccessControlAllowOrigin}e env=AccessControlAllowOrigin
+  Header always set Access-Control-Allow-Methods "GET, POST"
+  Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With"
+
+  # Enable CORS for credentials (cookies, HTTP authentication)
+  Header always set Access-Control-Allow-Credentials "true"
+</IfModule>
+
+
+<filesMatch "\.(html|htm|php)$">
+  FileETag None
+  <ifModule mod_headers.c>
+    Header unset ETag
+    Header set Cache-Control "max-age=0, no-cache, no-store, public"
+    Header set Pragma "no-cache"
+    Header set Expires "Wed, 11 Jan 1984 05:00:00 GMT"
+  </ifModule>
+</filesMatch>
+
+RewriteEngine on
+RewriteRule ^$ public/index.php [L]
+RewriteRule ^((?!public/).*)$ public/$1 [L,NC]
