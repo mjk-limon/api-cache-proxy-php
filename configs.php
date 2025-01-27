@@ -2,7 +2,7 @@
 
 return [
     'base' => 'https://pa-bn.test.api/api/v1',
-    'apiKey' => '',
+    'apiKey' => '12345',
     'cityIds' => [28143 => 'Dhaka'],
 
     'db' => [

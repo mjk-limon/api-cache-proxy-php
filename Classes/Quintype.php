@@ -168,6 +168,12 @@ final class Quintype
         return $this->request;
     }
 
+    /**
+     * Get response
+     *
+     * @param mixed $data
+     * @return true
+     */
     public function response($data)
     {
         session_cache_limiter('public');

@@ -9,6 +9,9 @@ class QuintypeApi
      */
     private $quintype;
 
+    /**
+     * @param Quintype $quintype
+     */
     public function __construct(Quintype $quintype)
     {
         $this->quintype = $quintype;
@@ -41,6 +44,7 @@ class QuintypeApi
     public function buildLatestCollection()
     {
         $route = $this->quintype->request()->route();
+        $apiKey = $this->quintype->request()->server('HTTP_X_API_KEY');
         $requestedPath = $this->quintype->request()->server('REQUEST_URI');
 
         $data = $this->make($requestedPath);
@@ -89,8 +93,8 @@ class QuintypeApi
 
             $this->quintype->set([
                 "updated-at" => $updatedAt,
-                "token" => "",
-                "token-receive-time" => time(),
+                "token" => $apiKey,
+                "token-receive-time" => time() * 1000,
                 "requester-code" => "HF-BL",
 
                 "company-name" => "হাল ফ্যাশন",

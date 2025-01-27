@@ -74,27 +74,30 @@ class Cache
     }
 
     /**
+     * @throws \Exception
+     * @return true
+     */
+    public function pull()
+    {
+        $data = $this->cache->get($this->cacheKey());
+
+        if ($data !== false) {
+            $this->quintype->set($data);
+
+            if ($this->quintype->data['token-receive-time'] + 1800000 > time() * 1000) {
+                return true;
+            }
+        }
+
+        throw new \Exception('', 103);
+    }
+
+    /**
      * @return void
      */
     public function store()
     {
         $quintypeArray = $this->quintype->toArray();
         $this->cache->set($this->cacheKey(), json_encode($quintypeArray));
-    }
-
-    /**
-     * @throws \Exception
-     * @return null|array
-     */
-    public function get()
-    {
-        $data = $this->cache->get($this->cacheKey());
-
-        if ($data !== false) {
-            $this->quintype->set($data);
-            return;
-        }
-
-        throw new \Exception('', 103);
     }
 }

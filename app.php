@@ -8,13 +8,23 @@ spl_autoload_register($configs['spl']);
 $app = new Quintype($configs);
 
 try {
-    $app->cache()->get();
+    $app->request()->verify();
+    $app->cache()->pull();
 } catch (\Exception $e) {
-    try {
-        $app->api()->call();
-        $app->cache()->store();
-    } catch (\Exception $e) {
-        return $app->response(['error' => $e->getCode()]);
+    $code = $e->getCode();
+
+    switch ($code) {
+        case 103:
+            try {
+                $app->api()->call();
+                $app->cache()->store();
+            } catch (\Exception $e) {
+                return $app->response(['error' => $e->getCode()]);
+            }
+            break;
+
+        default:
+            return $app->response(['error' => $e->getCode()]);
     }
 }
 
