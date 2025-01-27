@@ -1,0 +1,39 @@
+openapi: 3.0.0
+info:
+  title: Application API
+  version: "1.0"
+servers:
+  - url: https://qt-hf-api.services.palo
+    description: Base Endpoint
+
+paths:
+  /collections/latest-haalfashion:
+    post:
+      summary: Get latest collection
+      security:
+        - authApiKey: []
+      responses:
+        200:
+          $ref: "#/components/responses/collectionResponse"
+
+components:
+  securitySchemes:
+    authApiKey:
+      type: apiKey
+      in: header
+      name: X-API-KEY
+
+  responses:
+    collectionResponse:
+      description: Successful response
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              error:
+                type: integer
+                description: '401: Mismatch api credentials'
+                example: 401
+            required:
+              - error
