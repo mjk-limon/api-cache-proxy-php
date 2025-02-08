@@ -52,4 +52,15 @@ class Database
     {
         return $this->settings[$key];
     }
+
+    public function apiConfigs()
+    {
+        $query = "SELECT * FROM `" . $this->config('prefix') . "settings`";
+
+        $statement = $this->conn->prepare($query);
+        $statement->execute();
+        $configs = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        $this->quintype->set($configs);
+    }
 }

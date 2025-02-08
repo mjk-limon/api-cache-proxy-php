@@ -57,7 +57,7 @@ class Cache
     private function cacheKey()
     {
         $keyPrefix = $this->config('key_prefix');
-        $key = $this->quintype->request()->route();
+        $key = $this->quintype->config('dt');
 
         return $keyPrefix . $key;
     }
@@ -82,11 +82,7 @@ class Cache
         $data = $this->cache->get($this->cacheKey());
 
         if ($data !== false) {
-            $this->quintype->set($data);
-
-            if ($this->quintype->data['token-receive-time'] + 1800000 > time() * 1000) {
-                return true;
-            }
+            return $this->quintype->set($data);
         }
 
         throw new \Exception('', 103);

@@ -21,7 +21,7 @@ components:
     authApiKey:
       type: apiKey
       in: header
-      name: X-API-KEY
+      name: X-APP-TOKEN
 
   responses:
     collectionResponse:

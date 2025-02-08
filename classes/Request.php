@@ -59,14 +59,28 @@ class Request
      */
     public function route(): string
     {
+        ['code' => $code] = $this->quintype->config('service');
         ['path' => $path] = parse_url($this->server('REQUEST_URI'));
-        return trim(implode('.', explode('/', $path)), '.');
+
+        return $code . '_' . trim(implode('.', explode('/', $path)), '.');
     }
 
-    public function verify()
+    public function verify(array $apiConfs)
     {
-        if ($this->server('HTTP_X_API_KEY') !== $this->quintype->config('apiKey')) {
+        $appToken = $this->server('HTTP_X_APP_TOKEN');
+
+        if (!$appToken) {
+            throw new \Exception('', 402);
+        }
+
+        $appIndex = array_search($appToken, array_column($apiConfs, 'app_token'));
+
+        if ($appIndex === false) {
             throw new \Exception('', 401);
         }
+
+        $this->quintype->setConfig('service', $apiConfs[$appIndex]);
+
+        return $this;
     }
 }

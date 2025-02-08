@@ -8,7 +8,21 @@ spl_autoload_register($configs['spl']);
 $app = new Quintype($configs);
 
 try {
-    $app->request()->verify();
+    $app->setConfig('dt', 'configs');
+    $app->cache()->pull();
+} catch (\Exception $e) {
+    $app->db()->apiConfigs();
+    $app->cache()->store();
+}
+
+try {
+    $apiConfs = $app->toArray();
+
+    $dt = $app->request()
+        ->verify($apiConfs)
+        ->route();
+
+    $app->setConfig('dt', $dt);
     $app->cache()->pull();
 } catch (\Exception $e) {
     $code = $e->getCode();

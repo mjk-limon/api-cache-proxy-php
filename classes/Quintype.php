@@ -6,11 +6,10 @@ final class Quintype
      * @var array
      */
     protected $settings = [
-        'serviceTypeId' => 2,
+        'dt' => '',
+        'service' => [],
         'base' => 'https://pa-bn.test.api/api/v1',
         'apiKey' => '',
-        'cityIds' => [],
-        'windSpeedUnit' => 'km/h',
         'db' => [],
         'cache' => [],
     ];
@@ -54,6 +53,11 @@ final class Quintype
     public function __construct($configs)
     {
         $this->settings = array_merge($this->settings, $configs);
+    }
+
+    public function setConfig($key, $value)
+    {
+        $this->settings[$key] = $value;
     }
 
     /**

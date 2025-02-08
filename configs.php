@@ -9,15 +9,15 @@ return [
         'host' => '127.0.0.1',
         'user' => 'root',
         'password' => 'admin',
-        'dbname' => 'ser_weather',
-        'prefix' => 'wt_',
+        'dbname' => 'ser_qt_api',
+        'prefix' => 'story_api_',
     ],
 
     'cache' => [
         'host' => '127.0.0.1',
         'port' => 11211,
         'password' => '',
-        'key_prefix' => 'weather_data_city_',
+        'key_prefix' => 'qt_api_',
     ],
 
     'timezone' => 'Asia/Dhaka',
