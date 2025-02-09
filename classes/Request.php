@@ -1,5 +1,7 @@
 <?php
 
+use Exceptions\RequestException;
+
 class Request
 {
     /**
@@ -70,13 +72,13 @@ class Request
         $appToken = $this->server('HTTP_X_APP_TOKEN');
 
         if (!$appToken) {
-            throw new \Exception('', 402);
+            throw new RequestException(1001);
         }
 
         $appIndex = array_search($appToken, array_column($apiConfs, 'app_token'));
 
         if ($appIndex === false) {
-            throw new \Exception('', 401);
+            throw new RequestException(1001);
         }
 
         $this->quintype->setConfig('service', $apiConfs[$appIndex]);

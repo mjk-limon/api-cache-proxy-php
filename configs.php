@@ -1,9 +1,7 @@
 <?php
 
 return [
-    'base' => 'https://pa-bn.test.api/api/v1',
-    'apiKey' => '12345',
-    'cityIds' => [28143 => 'Dhaka'],
+    'timezone' => 'Asia/Dhaka',
 
     'db' => [
         'host' => '127.0.0.1',
@@ -17,13 +15,11 @@ return [
         'host' => '127.0.0.1',
         'port' => 11211,
         'password' => '',
-        'key_prefix' => 'qt_api_',
+        'key_prefix' => 'palo_api_',
     ],
 
-    'timezone' => 'Asia/Dhaka',
-
     'spl' => function ($class) {
-        $path = sprintf('%s/classes/%s.php', __DIR__, $class);
+        $path = sprintf('%s/classes/%s.php', __DIR__, str_replace('\\', '/', $class));
 
         if (file_exists($path)) {
             return require($path);

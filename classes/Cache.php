@@ -1,11 +1,13 @@
 <?php
 
+use Exceptions\DataNotFoundException;
+
 class Cache
 {
     /**
      * Cache instance
      *
-     * @var \Memcache
+     * @var \Memcached
      */
     private $cache;
 
@@ -74,6 +76,16 @@ class Cache
     }
 
     /**
+     * Flush all cache
+     *
+     * @return false|string
+     */
+    public function flush()
+    {
+        return $this->cache->flush();
+    }
+
+    /**
      * @throws \Exception
      * @return true
      */
@@ -85,7 +97,7 @@ class Cache
             return $this->quintype->set($data);
         }
 
-        throw new \Exception('', 103);
+        throw new DataNotFoundException;
     }
 
     /**
