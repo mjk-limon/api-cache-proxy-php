@@ -90,7 +90,7 @@ class Response
             $data = json_decode($data, true);
         }
 
-        $data += $template;
+        $data = array_merge($template, $data);
 
         return $data;
     }
