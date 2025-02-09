@@ -7,7 +7,7 @@ servers:
     description: Base Endpoint
 
 paths:
-  /collections/latest-haalfashion:
+  /latest:
     post:
       summary: Get latest collection
       security:

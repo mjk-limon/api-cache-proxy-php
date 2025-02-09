@@ -1,5 +1,7 @@
 <?php
 
+use Exceptions\QuintypeApiException;
+
 class QuintypeApi
 {
     /**
@@ -27,12 +29,14 @@ class QuintypeApi
         $route = $this->quintype->request()->route();
 
         switch ($route) {
-            case 'collections.latest-haalfashion':
-                $this->buildLatestCollection();
-                return;
+            case 'QT_PA_latest':
+                return $this->buildCollection('latest');
+
+            case 'QT_HF_latest':
+                return $this->buildCollection('latest-haalfashion');
         }
 
-        throw new \Exception('', 404);
+        throw new QuintypeApiException(404);
     }
 
     /**
@@ -41,16 +45,15 @@ class QuintypeApi
      * @throws \Exception
      * @return void
      */
-    public function buildLatestCollection()
+    public function buildCollection($collectionType)
     {
         $route = $this->quintype->request()->route();
         $apiKey = $this->quintype->request()->server('HTTP_X_API_KEY');
-        $requestedPath = $this->quintype->request()->server('REQUEST_URI');
 
-        $data = $this->make($requestedPath);
+        $data = $this->make('collections/' . $collectionType);
 
-        if ($data === false) {
-            throw new \Exception('', 100);
+        if ($data === null || $data === false) {
+            throw new QuintypeApiException(1002);
         }
 
         try {
@@ -75,10 +78,10 @@ class QuintypeApi
 
                 // Get image url
                 $image = $alternative
-                    ? $alternative["home"]["default"]["hero-image"]["hero-image-s3-key"]
+                    ? ($alternative["home"]["default"]["hero-image"]["hero-image-s3-key"] ?? $heroImage)
                     : $heroImage;
 
-                $image = "https://images.prothomalo.com/" . $image;
+                $image = "https://media.prothomalo.com/" . $image;
 
                 return [
                     "last-published-at" => $lastPublishedAt,
@@ -109,7 +112,7 @@ class QuintypeApi
                 "items" => $items,
             ]);
         } catch (\Exception $e) {
-            throw new \Exception('', 101, $e);
+            throw new QuintypeApiException(1003, null, $e);
         }
     }
 
@@ -122,7 +125,8 @@ class QuintypeApi
      */
     private function make(string $endpoint, array $params = [])
     {
-        $target = $this->quintype->config('base') . '/' . ltrim($endpoint, '/');
+        $base = $this->quintype->config('service')['base_url'];
+        $target = $base . '/' . ltrim($endpoint, '/');
 
         $c = curl_init();
         curl_setopt_array($c, [

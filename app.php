@@ -6,40 +6,38 @@ date_default_timezone_set($configs['timezone']);
 spl_autoload_register($configs['spl']);
 
 $app = new Quintype($configs);
+// $app->cache()->flush(); EXIT;
 
 try {
-    $app->setConfig('dt', 'configs');
-    $app->cache()->pull();
-} catch (\Exception $e) {
-    $app->db()->apiConfigs();
-    $app->cache()->store();
+    (function () use ($app) {
+        try {
+            $app->setConfig('dt', 'configs');
+            $app->cache()->pull();
+        } catch (Exceptions\DataNotFoundException $e) {
+            $app->db()->apiConfigs();
+            $app->cache()->store();
+        }
+    })();
+
+    (function () use ($app) {
+        try {
+            $apiConfs = $app->toArray();
+
+            $dt = $app->request()
+                ->verify($apiConfs)
+                ->route();
+
+            $app->setConfig('dt', $dt);
+            $app->cache()->pull();
+        } catch (Exceptions\DataNotFoundException $e) {
+            $app->api()->call();
+            $app->cache()->store();
+        }
+    })();
+} catch (Exceptions\QuintypeException $e) {
+    return $app->response($e);
+} catch (Exception $e) {
+    return $app->response($e);
 }
 
-try {
-    $apiConfs = $app->toArray();
-
-    $dt = $app->request()
-        ->verify($apiConfs)
-        ->route();
-
-    $app->setConfig('dt', $dt);
-    $app->cache()->pull();
-} catch (\Exception $e) {
-    $code = $e->getCode();
-
-    switch ($code) {
-        case 103:
-            try {
-                $app->api()->call();
-                $app->cache()->store();
-            } catch (\Exception $e) {
-                return $app->response(['error' => $e->getCode()]);
-            }
-            break;
-
-        default:
-            return $app->response(['error' => $e->getCode()]);
-    }
-}
-
-return $app->response($app->data);
+return $app->response($app->toArray());

@@ -8,8 +8,6 @@ final class Quintype
     protected $settings = [
         'dt' => '',
         'service' => [],
-        'base' => 'https://pa-bn.test.api/api/v1',
-        'apiKey' => '',
         'db' => [],
         'cache' => [],
     ];
@@ -181,8 +179,9 @@ final class Quintype
     public function response($data)
     {
         session_cache_limiter('public');
-        header("Content-Type: application/json");
-        echo is_array($data) ? json_encode($data) : $data;
-        return true;
+
+        echo (new Response)
+            ->setType(Response::TYPE_JSON)
+            ->generate($data);
     }
 }
