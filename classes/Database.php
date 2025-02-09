@@ -53,6 +53,11 @@ class Database
         return $this->settings[$key];
     }
 
+    /**
+     * Get api configs from database
+     *
+     * @return void
+     */
     public function apiConfigs()
     {
         $query = "SELECT * FROM `" . $this->config('prefix') . "settings`";

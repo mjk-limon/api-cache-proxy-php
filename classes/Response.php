@@ -5,8 +5,17 @@ class Response
     const TYPE_JSON = 1;
     const TYPE_TEXT = 2;
 
+    /**
+     * Response type
+     *
+     * @var integer
+     */
     private int $type;
 
+    /**
+     * @param integer $type
+     * @return static
+     */
     public function setType(int $type)
     {
         $this->type = $type;
@@ -14,6 +23,10 @@ class Response
         return $this;
     }
 
+    /**
+     * @param mixed $data
+     * @return array
+     */
     public function generate($data)
     {
         $data = static::format($data);
@@ -26,6 +39,10 @@ class Response
         return $data;
     }
 
+    /**
+     * @param mixed $data
+     * @return array
+     */
     private static function format($data)
     {
         if ($data instanceof Exception) {

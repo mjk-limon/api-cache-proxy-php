@@ -67,6 +67,12 @@ class Request
         return $code . '_' . trim(implode('.', explode('/', $path)), '.');
     }
 
+    /**
+     * Verify request
+     *
+     * @param array $apiConfs
+     * @return static
+     */
     public function verify(array $apiConfs)
     {
         $appToken = $this->server('HTTP_X_APP_TOKEN');
