@@ -61,7 +61,7 @@ class Request
      */
     public function route(): string
     {
-        ['code' => $code] = $this->quintype->config('service');
+        $code = $this->quintype->config('service.code');
         ['path' => $path] = parse_url($this->server('REQUEST_URI'));
 
         return $code . '_' . trim(implode('.', explode('/', $path)), '.');

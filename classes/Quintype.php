@@ -66,7 +66,18 @@ final class Quintype
      */
     public function config(string $key)
     {
-        return $this->settings[$key];
+        $keys = explode('.', $key);
+        $value = $this->settings;
+
+        foreach ($keys as $k) {
+            if (!isset($value[$k])) {
+                return null;
+            }
+
+            $value = $value[$k];
+        }
+
+        return $value;
     }
 
     /**
@@ -180,7 +191,7 @@ final class Quintype
     {
         session_cache_limiter('public');
 
-        echo (new Response)
+        echo (new Response($this))
             ->setType(Response::TYPE_JSON)
             ->generate($data);
     }

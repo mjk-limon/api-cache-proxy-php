@@ -47,9 +47,6 @@ class QuintypeApi
      */
     public function buildCollection($collectionType)
     {
-        $route = $this->quintype->request()->route();
-        $apiKey = $this->quintype->request()->server('HTTP_X_API_KEY');
-
         $data = $this->make('collections/' . $collectionType);
 
         if ($data === null || $data === false) {
@@ -96,18 +93,6 @@ class QuintypeApi
 
             $this->quintype->set([
                 "updated-at" => $updatedAt,
-                "token" => $apiKey,
-                "token-receive-time" => time() * 1000,
-                "requester-code" => "HF-BL",
-
-                "company-name" => "হাল ফ্যাশন",
-                "company-name-en" => "Haal.Fashion",
-                "logo" => "https://www.haal.fashion/haalfashion.svg",
-                "favicon" => "https://www.haal.fashion/favicon.png",
-                "response-status" => "success",
-                "error-code" => null,
-                "error-reason" => null,
-
                 "item-count" => count($items),
                 "items" => $items,
             ]);
@@ -125,7 +110,7 @@ class QuintypeApi
      */
     private function make(string $endpoint, array $params = [])
     {
-        $base = $this->quintype->config('service')['base_url'];
+        $base = $this->quintype->config('service.base_url');
         $target = $base . '/' . ltrim($endpoint, '/');
 
         $c = curl_init();

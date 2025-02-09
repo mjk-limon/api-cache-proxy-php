@@ -106,6 +106,8 @@ class Cache
     public function store()
     {
         $quintypeArray = $this->quintype->toArray();
-        $this->cache->set($this->cacheKey(), json_encode($quintypeArray));
+        $expireSeconds = $this->quintype->config('service.request_interval_in_mins') * 60;
+
+        $this->cache->set($this->cacheKey(), json_encode($quintypeArray), $expireSeconds);
     }
 }
