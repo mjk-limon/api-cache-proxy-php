@@ -1,6 +1,7 @@
 <?php
 
 return [
+    'appKey' => 'palo_qt_api',
     'timezone' => 'Asia/Dhaka',
 
     'db' => [

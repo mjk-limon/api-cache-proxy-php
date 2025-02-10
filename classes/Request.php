@@ -75,19 +75,21 @@ class Request
      */
     public function verify(array $apiConfs)
     {
+        $appKey = $this->quintype->config('appKey');
         $appToken = $this->server('HTTP_X_APP_TOKEN');
 
         if (!$appToken) {
             throw new RequestException(1001);
         }
 
-        $appIndex = array_search($appToken, array_column($apiConfs, 'app_token'));
+        $compare = fn ($v) => hash_equals(hash_hmac('sha256', $v['app_token'], $appKey), $appToken);
+        $appService = array_filter($apiConfs, $compare);
 
-        if ($appIndex === false) {
+        if (!count($appService)) {
             throw new RequestException(1001);
         }
 
-        $this->quintype->setConfig('service', $apiConfs[$appIndex]);
+        $this->quintype->setConfig('service', current($appService));
 
         return $this;
     }

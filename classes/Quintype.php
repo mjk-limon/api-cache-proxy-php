@@ -8,6 +8,7 @@ final class Quintype
     protected $settings = [
         'dt' => '',
         'service' => [],
+        'appKey' => '',
         'db' => [],
         'cache' => [],
     ];
