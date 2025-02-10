@@ -29,10 +29,10 @@ class QuintypeApi
         $route = $this->quintype->request()->route();
 
         switch ($route) {
-            case 'QT_PA_get_featured_articles':
+            case 'QT_PA_api.v1.get_featured_articles':
                 return $this->buildCollection('latest');
 
-            case 'QT_HF_get_featured_articles':
+            case 'QT_HF_api.v1.get_featured_articles':
                 return $this->buildCollection('latest-haalfashion');
         }
 
