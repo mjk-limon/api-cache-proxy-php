@@ -47,7 +47,7 @@ class QuintypeApi
      */
     public function buildCollection($collectionType)
     {
-        $data = $this->make('collections/' . $collectionType);
+        $data = $this->make('collections/' . $collectionType, ['limit' => 30]);
 
         if ($data === null || $data === false) {
             throw new QuintypeApiException(1002);
