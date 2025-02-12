@@ -77,6 +77,11 @@ class Request
     {
         $appKey = $this->quintype->config('appKey');
         $appToken = $this->server('HTTP_X_APP_TOKEN');
+        $requestMethod = $this->server('REQUEST_METHOD');
+
+        if (strtolower($requestMethod) !== 'post') {
+            throw new RequestException(400);
+        }
 
         if (!$appToken) {
             throw new RequestException(1001);
