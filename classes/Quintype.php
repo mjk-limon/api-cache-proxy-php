@@ -11,6 +11,9 @@ final class Quintype
         'appKey' => '',
         'db' => [],
         'cache' => [],
+        'request' => [
+            'whitelists' => [],
+        ],
     ];
 
     /**
