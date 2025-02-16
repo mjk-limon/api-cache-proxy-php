@@ -30,7 +30,7 @@ try {
             $app->setConfig('dt', $dt);
 
             if ($app->cache()->pull()) {
-                exit(0);
+                throw new Exceptions\RequestException(1003);
             }
         } catch (Exceptions\DataNotFoundException $e) {
             $app->api()->call();

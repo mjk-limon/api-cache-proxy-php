@@ -4,9 +4,11 @@ namespace Exceptions;
 
 use Exception;
 
-abstract class QuintypeException extends Exception
+class QuintypeException extends Exception
 {
-    protected $errorMessages = [];
+    protected $errorMessages = [
+        1004 => 'Something went wrong. Please try again later'
+    ];
 
     public function __construct($code, $message = null, Exception $previous = null)
     {

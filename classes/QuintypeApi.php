@@ -1,6 +1,7 @@
 <?php
 
 use Exceptions\QuintypeApiException;
+use Exceptions\QuintypeException;
 
 class QuintypeApi
 {
@@ -97,7 +98,7 @@ class QuintypeApi
                 "items" => $items,
             ]);
         } catch (\Exception $e) {
-            throw new QuintypeApiException(1003, null, $e);
+            throw new QuintypeException(1004, null, $e);
         }
     }
 
