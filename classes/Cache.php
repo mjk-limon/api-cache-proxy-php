@@ -94,7 +94,8 @@ class Cache
         $data = $this->cache->get($this->cacheKey());
 
         if ($data !== false) {
-            return $this->quintype->set($data);
+            $this->quintype->set($data);
+            return true;
         }
 
         throw new DataNotFoundException;

@@ -28,7 +28,10 @@ try {
                 ->route();
 
             $app->setConfig('dt', $dt);
-            $app->cache()->pull();
+
+            if ($app->cache()->pull()) {
+                exit(0);
+            }
         } catch (Exceptions\DataNotFoundException $e) {
             $app->api()->call();
             $app->cache()->store();
