@@ -1,8 +1,10 @@
 <IfModule mod_headers.c>
-  # SetEnvIf Origin "http(s)?://(qt-hf-api\.services\.palo|localhost)$" AccessControlAllowOrigin=$0
-  Header always set Access-Control-Allow-Origin "qt-hf-api.services.palo"
+  # SetEnvIf Origin "http(s)?://(qt-hf-api\.services\.palo|localhost)$" AccessControlAllowOrigin=$1
+  # Header always set Access-Control-Allow-Origin "services.prothomalo.com services.prothom.alo"
+  SetEnvIf Origin "http(s)?://(www\.)?(services.prothomalo.com|services.prothom.alo)$" AccessControlAllowOrigin=$0
+  Header always set Access-Control-Allow-Origin %{AccessControlAllowOrigin}e env=AccessControlAllowOrigin
   Header always set Access-Control-Allow-Methods "GET, POST"
-  Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, X-API-KEY"
+  Header always set Access-Control-Allow-Headers "Content-Type, Authorization, X-Requested-With, X-APP-TOKEN"
 
   # Enable CORS for credentials (cookies, HTTP authentication)
   Header always set Access-Control-Allow-Credentials "true"
