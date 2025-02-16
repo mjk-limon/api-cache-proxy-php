@@ -76,15 +76,8 @@ class Request
     public function verify(array $apiConfs)
     {
         $appKey = $this->quintype->config('appKey');
-        $whiteListedIps = $this->quintype->config('request.whitelists');
-
         $appToken = $this->server('HTTP_X_APP_TOKEN');
         $requestMethod = $this->server('REQUEST_METHOD');
-        $requestAddr = $this->server('REMOTE_ADDR');
-
-        if (!in_array($requestAddr, $whiteListedIps)) {
-            throw new RequestException(403);
-        }
 
         if (strtolower($requestMethod) !== 'post') {
             throw new RequestException(400);
