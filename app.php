@@ -14,17 +14,17 @@ try {
             $app->setConfig('dt', 'configs');
             $app->cache()->pull();
         } catch (Exceptions\DataNotFoundException $e) {
-            $app->db()->apiConfigs();
-            $app->cache()->store();
+            $app->db()->publishers();
+            $app->cache()->store(30 * 60);
         }
     })();
 
     (function () use ($app) {
         try {
-            $apiConfs = $app->toArray();
+            $publishers = $app->toArray();
 
             $dt = $app->request()
-                ->verify($apiConfs)
+                ->verify($publishers)
                 ->route();
 
             $app->setConfig('dt', $dt);

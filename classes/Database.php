@@ -58,14 +58,21 @@ class Database
      *
      * @return void
      */
-    public function apiConfigs()
+    public function publishers()
     {
-        $query = "SELECT * FROM `" . $this->config('prefix') . "settings`";
+        $prefix = $this->config('prefix');
+
+        $query = "SELECT p.*, pp.*, pt.generated_token, d.api_endpoint, d.collection_slug " .
+            "FROM `" . $prefix . "publishers` p " .
+            "LEFT JOIN `" . $prefix . "publisher_tokens` pt ON pt.publisher_id = p.id " .
+            "LEFT JOIN `" . $prefix . "permissions` pp ON pp.publisher_id = p.id " .
+            "JOIN `" . $prefix . "publisher_data_sources` pd ON pd.publisher_id = p.id " .
+            "JOIN `" . $prefix . "datasources` d ON pd.data_source_id = d.id AND d.status = '1'";
 
         $statement = $this->conn->prepare($query);
         $statement->execute();
-        $configs = $statement->fetchAll(PDO::FETCH_ASSOC);
+        $publishers = $statement->fetchAll(PDO::FETCH_ASSOC);
 
-        $this->quintype->set($configs);
+        $this->quintype->set($publishers);
     }
 }

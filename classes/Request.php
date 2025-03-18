@@ -54,6 +54,11 @@ class Request
         return $this->server[$key] ?? '';
     }
 
+    public function path()
+    {
+        return parse_url($this->server('REQUEST_URI'), PHP_URL_PATH);
+    }
+
     /**
      * Get requested route
      *
@@ -61,8 +66,8 @@ class Request
      */
     public function route(): string
     {
+        $path = $this->path();
         $code = $this->quintype->config('service.code');
-        ['path' => $path] = parse_url($this->server('REQUEST_URI'));
 
         return $code . '_' . trim(implode('.', explode('/', $path)), '.');
     }
@@ -70,12 +75,11 @@ class Request
     /**
      * Verify request
      *
-     * @param array $apiConfs
+     * @param array $publishers
      * @return static
      */
-    public function verify(array $apiConfs)
+    public function verify(array $publishers)
     {
-        $appKey = $this->quintype->config('appKey');
         $appToken = $this->server('HTTP_X_APP_TOKEN');
         $requestMethod = $this->server('REQUEST_METHOD');
 
@@ -87,15 +91,29 @@ class Request
             throw new RequestException(1001);
         }
 
-        $compare = fn ($v) => hash_equals(hash_hmac('sha256', $v['app_token'], $appKey), $appToken);
-        $appService = array_filter($apiConfs, $compare);
+        $service = array_reduce($publishers, function ($c, $v) use ($appToken) {
+            if (
+                !$v['is_locked'] &&
+                $v['allow_send_request'] &&
+                $v['generated_token'] &&
+                hash_equals($v['generated_token'], $appToken)
+            ) {
+                ['api_endpoint' => $endpoint, 'collection_slug' => $slug] = $v;
+                unset($v['api_endpoint'], $v['collection_slug']);
 
-        if (!count($appService)) {
+                $v['apis'] = array_merge($c['apis'] ?? [], [$endpoint => $slug]);
+
+                return $v;
+            }
+
+            return $c;
+        }, []);
+
+        if (!count($service)) {
             throw new RequestException(1001);
         }
 
-        $this->quintype->setConfig('service', current($appService));
-
+        $this->quintype->setConfig('service', $service);
         return $this;
     }
 }

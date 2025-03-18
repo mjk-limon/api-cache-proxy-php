@@ -27,14 +27,13 @@ class QuintypeApi
      */
     public function call()
     {
-        $route = $this->quintype->request()->route();
+        $apis = $this->quintype->config('service.apis');
 
-        switch ($route) {
-            case 'QT_PA_api.v1.get_featured_articles':
-                return $this->buildCollection('latest');
+        $path = $this->quintype->request()->path();
+        $path = pathinfo($path, PATHINFO_FILENAME);
 
-            case 'QT_HF_api.v1.get_featured_articles':
-                return $this->buildCollection('latest-haalfashion');
+        if ($slug = $apis[$path] ?? null) {
+            return $this->buildCollection($slug);
         }
 
         throw new QuintypeApiException(404);
@@ -111,7 +110,7 @@ class QuintypeApi
      */
     private function make(string $endpoint, array $params = [])
     {
-        $base = $this->quintype->config('service.base_url');
+        $base = $this->quintype->config('base_url');
         $target = $base . '/' . ltrim($endpoint, '/');
 
         $c = curl_init();
