@@ -68,7 +68,7 @@ class Response
             "token-receive-time" => time() * 1000,
             "requester-code" => $service['code'] ?? '',
 
-            "company-name" => $service['title'] ?? '',
+            "company-name" => $service['company_name'] ?? '',
             "company-name-en" => $service['title_en'] ?? '',
             "logo" => $service['logo'] ?? '',
             "favicon" => $service['favicon'] ?? '',
