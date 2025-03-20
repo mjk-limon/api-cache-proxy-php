@@ -1,8 +1,8 @@
 <?php
 
 return [
-    'appKey' => '',
     'timezone' => 'Asia/Dhaka',
+    'base_url' => 'https://www.prothomalo.com/api/v1',
 
     'db' => [
         'host' => '127.0.0.1',

@@ -39,6 +39,23 @@ class QuintypeApi
         throw new QuintypeApiException(404);
     }
 
+    public function sandboxed()
+    {
+        $is_sandboxed = $this->quintype->config('service.is_sandboxed');
+
+        if ($is_sandboxed) {
+            $path = $this->quintype->request()->path();
+            $path = pathinfo($path, PATHINFO_FILENAME);
+
+            $data = file_get_contents(__DIR__ . '/../samples/' . $path . '.json');
+            $this->quintype->set($data);
+
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Build current condition data
      *

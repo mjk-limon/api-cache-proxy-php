@@ -29,6 +29,10 @@ try {
 
             $app->setConfig('dt', $dt);
 
+            if ($app->api()->sandboxed()) {
+                return false;
+            }
+
             if ($app->cache()->pull()) {
                 throw new Exceptions\RequestException(1003);
             }
