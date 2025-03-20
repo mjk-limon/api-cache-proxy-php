@@ -44,13 +44,20 @@ class QuintypeApi
         $is_sandboxed = $this->quintype->config('service.is_sandboxed');
 
         if ($is_sandboxed) {
+            $apis = $this->quintype->config('service.apis');
+
             $path = $this->quintype->request()->path();
             $path = pathinfo($path, PATHINFO_FILENAME);
+            $json = __DIR__ . '/../samples/' . ($apis[$path] ?? '') . '.json';
 
-            $data = file_get_contents(__DIR__ . '/../samples/' . $path . '.json');
-            $this->quintype->set($data);
+            if (file_exists($json)) {
+                $data = file_get_contents($json);
+                $this->quintype->set($data);
 
-            return true;
+                return true;
+            }
+
+            throw new QuintypeApiException(404);
         }
 
         return false;
