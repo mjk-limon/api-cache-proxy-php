@@ -92,12 +92,7 @@ class Request
         }
 
         $service = array_reduce($publishers, function ($c, $v) use ($appToken) {
-            if (
-                !$v['is_locked'] &&
-                $v['allow_send_request'] &&
-                $v['generated_token'] &&
-                hash_equals($v['generated_token'], $appToken)
-            ) {
+            if (hash_equals($v['generated_token'], $appToken)) {
                 ['api_endpoint' => $endpoint, 'collection_slug' => $slug] = $v;
                 unset($v['api_endpoint'], $v['collection_slug']);
 

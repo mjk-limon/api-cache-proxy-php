@@ -68,10 +68,10 @@ class Response
             "token-receive-time" => time() * 1000,
             "requester-code" => $service['code'] ?? '',
 
-            "company-name" => $service['company_name'] ?? '',
-            "company-name-en" => $service['title_en'] ?? '',
-            "logo" => $service['logo'] ?? '',
-            "favicon" => $service['favicon'] ?? '',
+            "company-name" => $service['provider_bn'] ?? '',
+            "company-name-en" => $service['provider'] ?? '',
+            "logo" => $service['provider_logo'] ?? '',
+            "favicon" => $service['provider_favicon'] ?? '',
 
             "response-status" => "success",
             "error-code" => null,

@@ -62,12 +62,34 @@ class Database
     {
         $prefix = $this->config('prefix');
 
-        $query = "SELECT p.*, pp.*, pt.generated_token, d.api_endpoint, d.collection_slug " .
-            "FROM `" . $prefix . "publishers` p " .
-            "LEFT JOIN `" . $prefix . "publisher_tokens` pt ON pt.publisher_id = p.id " .
-            "LEFT JOIN `" . $prefix . "permissions` pp ON pp.publisher_id = p.id " .
-            "JOIN `" . $prefix . "publisher_data_sources` pd ON pd.publisher_id = p.id " .
-            "JOIN `" . $prefix . "datasources` d ON pd.data_source_id = d.id AND d.status = '1'";
+        $query = <<<SQL
+        SELECT
+            p.*,
+            d.provider,
+            d.provider_bn,
+            d.provider_logo,
+            d.provider_favicon,
+            d.api_endpoint,
+            d.collection_slug,
+            pt.key_text AS token_code,
+            pt.generated_token
+        FROM
+            `{$prefix}publishers` p
+        INNER JOIN
+            `{$prefix}publisher_tokens` pt ON pt.publisher_id = p.id
+        LEFT JOIN
+            `{$prefix}publisher_data_sources` pd ON pd.publisher_id = p.id
+        LEFT JOIN
+            `{$prefix}datasources` d ON pd.data_source_id = d.id AND d.status = '1'
+        LEFT JOIN
+            `{$prefix}permissions` pp ON pp.publisher_id = p.id
+        WHERE
+            p.deleted_at IS NULL
+        AND
+            pp.is_locked = 0
+        AND
+            pp.allow_send_request = 1;
+        SQL;
 
         $statement = $this->conn->prepare($query);
         $statement->execute();
