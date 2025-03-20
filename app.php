@@ -6,7 +6,7 @@ date_default_timezone_set($configs['timezone']);
 spl_autoload_register($configs['spl']);
 
 $app = new Quintype($configs);
-$app->cache()->flush();
+// $app->cache()->flush();
 
 try {
     (function () use ($app) {
