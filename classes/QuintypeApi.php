@@ -116,6 +116,8 @@ class QuintypeApi
             }, $items);
 
             $this->quintype->set([
+                "last-fetch-at" => time(),
+                "expires-at" => time() + $this->quintype->config('cache.data_cache_ttl'),
                 "updated-at" => $updatedAt,
                 "item-count" => count($items),
                 "items" => $items,
@@ -144,7 +146,6 @@ class QuintypeApi
         ]);
 
         $response = curl_exec($c);
-        curl_close($c);
 
         return json_decode($response, true);
     }

@@ -111,4 +111,37 @@ class Request
         $this->quintype->setConfig('service', $service);
         return $this;
     }
+
+    /**
+     * Verify rate limiting
+     *
+     * @return static
+     */
+    public function verifyRateLimit()
+    {
+        $rateLimit = $this->quintype->config('service.rate_limit');
+        $requestLimit = $this->quintype->config('service.request_limit');
+
+        $data = $this->quintype->toArray();
+
+        $lastFetchAt = $data['last-fetch-at'];
+        $lastRequestAt = $data['last-request-at'] ?? $lastFetchAt;
+        $currentRequest = $data['request-count'] ?? 1;
+
+        if (time() - $lastRequestAt < $rateLimit * 60) {
+            if (++$currentRequest > $requestLimit) {
+                throw new Exceptions\RequestException(1003);
+            }
+
+            $data['request-count'] = $currentRequest;
+        } else {
+            $data['last-request-at'] = time();
+            $data['request-count'] = 1;
+        }
+
+        $this->quintype->set($data);
+        $this->quintype->cache()->store();
+
+        return $this;
+    }
 }

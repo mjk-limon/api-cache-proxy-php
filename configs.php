@@ -17,6 +17,7 @@ return [
         'port' => 11211,
         'password' => '',
         'key_prefix' => 'palo_api_',
+        'data_cache_ttl' => 60 * 10,
     ],
 
     'spl' => function ($class) {

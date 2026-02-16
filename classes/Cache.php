@@ -107,7 +107,11 @@ class Cache
     public function store(?int $ttl = null)
     {
         $quintypeArray = $this->quintype->toArray();
-        $expireSeconds = !$ttl ? $this->quintype->config('service.rate_limit') * 60 : $ttl;
+        $expireSeconds = !$ttl
+            ? (isset($quintypeArray['expires-at'])
+                ? $quintypeArray['expires-at'] - time()
+                : $this->quintype->config('service.rate_limit') * 60)
+            : $ttl;
 
         $this->cache->set($this->cacheKey(), json_encode($quintypeArray), $expireSeconds);
     }

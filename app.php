@@ -6,7 +6,7 @@ date_default_timezone_set($configs['timezone']);
 spl_autoload_register($configs['spl']);
 
 $app = new Quintype($configs);
-// $app->cache()->flush();
+// $app->cache()->flush(); exit;
 
 try {
     (function () use ($app) {
@@ -33,9 +33,8 @@ try {
                 return false;
             }
 
-            if ($app->cache()->pull()) {
-                throw new Exceptions\RequestException(1003);
-            }
+            $app->cache()->pull();
+            $app->request()->verifyRateLimit();
         } catch (Exceptions\DataNotFoundException $e) {
             $app->api()->call();
             $app->cache()->store();
