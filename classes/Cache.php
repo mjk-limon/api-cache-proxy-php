@@ -60,8 +60,9 @@ class Cache
     {
         $keyPrefix = $this->config('key_prefix');
         $key = $this->quintype->config('dt');
+        $version = $this->cache->get('c_version') ?: 1;
 
-        return $keyPrefix . $key;
+        return $keyPrefix . $key . '_v_' . $version;
     }
 
     /**
@@ -72,6 +73,7 @@ class Cache
     public function ping()
     {
         $this->cache->set('ping', 'pong');
+
         return $this->cache->get('ping');
     }
 
@@ -107,6 +109,7 @@ class Cache
     public function store(?int $ttl = null)
     {
         $quintypeArray = $this->quintype->toArray();
+
         $expireSeconds = !$ttl
             ? (isset($quintypeArray['expires-at'])
                 ? $quintypeArray['expires-at'] - time()
