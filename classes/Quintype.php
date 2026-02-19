@@ -47,6 +47,11 @@ final class Quintype
     private $request;
 
     /**
+     * @var Log
+     */
+    private $log;
+
+    /**
      * @param array $configs
      */
     public function __construct($configs)
@@ -117,20 +122,6 @@ final class Quintype
      *
      * @return Database
      */
-    public function router()
-    {
-        if (!$this->db) {
-            $this->db = new Database($this);
-        }
-
-        return $this->db;
-    }
-
-    /**
-     * Get database instance
-     *
-     * @return Database
-     */
     public function db()
     {
         if (!$this->db) {
@@ -180,6 +171,18 @@ final class Quintype
         }
 
         return $this->request;
+    }
+
+    /**
+     * @return Log
+     */
+    public function log()
+    {
+        if (!$this->log) {
+            $this->log = new Log($this);
+        }
+
+        return $this->log;
     }
 
     /**

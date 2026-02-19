@@ -6,6 +6,8 @@ use Exception;
 
 class QuintypeException extends Exception
 {
+    protected $publisher = null;
+
     protected $errorMessages = [
         1004 => 'Something went wrong. Please try again later'
     ];
@@ -16,8 +18,20 @@ class QuintypeException extends Exception
         parent::__construct($message, $code, $previous);
     }
 
+    public function setPublisher(array $publisher)
+    {
+        $this->publisher = $publisher;
+
+        return $this;
+    }
+
     protected function getErrorMessage($code)
     {
         return $this->errorMessages[$code] ?? 'Unknown error.';
+    }
+
+    public function getPublisher()
+    {
+        return $this->publisher;
     }
 }

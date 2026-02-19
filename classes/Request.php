@@ -130,7 +130,8 @@ class Request
 
         if (time() - $lastRequestAt < $rateLimit * 60) {
             if (++$currentRequest > $requestLimit) {
-                throw new Exceptions\RequestException(1003);
+                throw (new RequestException(1003))
+                    ->setPublisher($this->quintype->config('service'));
             }
 
             $data['request-count'] = $currentRequest;

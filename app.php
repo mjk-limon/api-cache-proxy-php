@@ -41,9 +41,13 @@ try {
         }
     })();
 } catch (Exceptions\QuintypeException $e) {
+    $app->log()->write($e);
+
     return $app->response($e);
 } catch (Exception $e) {
     return $app->response($e);
 }
+
+$app->log()->write('200 success', $app->config('service.code'));
 
 return $app->response($app->toArray());
